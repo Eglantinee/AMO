@@ -151,22 +151,25 @@ def from_file(self):
         file = fd.askopenfile(mode='r', filetypes=[('Python Files', '*.txt')])
         if file is not None:
             content = file.read()
-            text = re.findall('\w+', content)
+            items = re.findall(r'[a-zA-Z]', content)
+            values = re.findall(r"[-+]?\d*\.\d+|\d+", content)
+            print(items, values)
             a, b, c, d, s = 0, 1, 0, 0, 0
-            for i in range(0, len(text) - 1, 2):
-                if text[i].lower() == 'a':
-                    a = float(text[i + 1])
-                elif text[i].lower() == 'b' and text[i + 1].isdigit() is True:
-                    if float(text[i + 1]) == 0:
+            for i in range(len(items)):
+                if items[i].lower() == 'a' and values[i].replace(".", "").isdigit() is True:
+                    print("enter")
+                    a = float(values[i])
+                elif items[i].lower() == 'b' and values[i].replace(".", "").isdigit() is True:
+                    if float(values[i]) == 0:
                         mb.showerror(title="Error", message="b should not be equal 0")
                     else:
-                        b = float(text[i + 1])
-                elif text[i].lower() == 'c' and text[i + 1].isdigit() is True:
-                    c = float(text[i + 1])
-                elif text[i].lower() == 'd' and text[i + 1].isdigit() is True:
-                    d = float(text[i + 1])
-                elif text[i].lower() == 's' and text[i + 1].isdigit() is True:
-                    s = float(text[i + 1])
+                        b = float(values[i])
+                elif items[i].lower() == 'c' and values[i].replace(".", "").isdigit() is True:
+                    c = float(values[i])
+                elif items[i].lower() == 'd' and values[i].replace(".", "").isdigit() is True:
+                    d = float(values[i])
+                elif items[i].lower() == 's' and values[i].replace(".", "").isdigit() is True:
+                    s = float(values[i])
             print(a, b, c, d, s)
 
     lb1 = Label(self.from_fl, text="something", font="Times 14")

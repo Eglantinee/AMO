@@ -1,5 +1,7 @@
 from tkinter import *
-import first_task, second_task
+import first_task
+import second_task
+import third_task
 
 
 class Lab1:
@@ -39,7 +41,7 @@ class Lab1:
 
         filemenu = Menu(mainmenu, tearoff=0)
         filemenu.add_command(label="First Task", command=lambda wind=first_task: change_window(wind))
-        filemenu.add_command(label="Новый", )
+        filemenu.add_command(label="Third Task", command=lambda wind=third_task: change_window(wind))
         filemenu.add_command(label="Сохранить...")
         filemenu.add_command(label="Выход")
         mainmenu.add_cascade(label="Файл", menu=filemenu)

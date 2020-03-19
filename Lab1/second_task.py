@@ -92,12 +92,13 @@ def from_file(self):
         file = fd.askopenfile(mode='r', filetypes=[('Python Files', '*.txt')])
         if file is not None:
             content = file.read()
-            text = re.findall('\w+', content)
+            items = re.findall(r'[a-zA-Z]', content)
+            values = re.findall(r"[-+]?\d*\.\d+|\d+", content)
+            print(items, values)
             x = 0
-            for i in range(0, len(text) - 1, 2):
-                if text[i].lower() == 'x':
-                    x = float(text[i + 1])
-
+            for i in range(len(items)):
+                if items[i].lower() == 'x' and values[i].replace(".", "").isdigit() is True:
+                    x = float(values[i])
             print(x)
 
     lb1 = Label(self.from_fl, text="something", font="Times 14")
