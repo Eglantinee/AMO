@@ -82,7 +82,7 @@ class Lab1:
 
         r1 = Radiobutton(text="File", variable=var, value=0, command=rad, font="Times 14")
         r2 = Radiobutton(text="Generated", variable=var, value=1, font="Times 14", command=rad)
-        r3 = Radiobutton(text="Generated", variable=var, value=2, font="Times 14", command=rad)
+        r3 = Radiobutton(text="From File", variable=var, value=2, font="Times 14", command=rad)
 
         r1.pack(anchor=W)
         r2.pack(anchor=W)
@@ -97,7 +97,7 @@ window.main_window()
 
 # todo 1: Catch large result
 # todo 2: 3 characters after coma
-
+# todo 3: check in 3 win (all values are zeros)
 # todo 4: mb check and run global functions?
 # todo 5: remove repeatable code
 # todo 6: make 3 window
