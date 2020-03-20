@@ -11,7 +11,7 @@ m = 45
 
 def size_and_title(self):
     self.root.title("Third Task")
-    self.root.geometry('630x400+400+200')
+    self.root.geometry('630x500+400+200')
 
 
 def check(elem):
@@ -91,22 +91,19 @@ def generated(self):
             lst.append(round(random.random(), ndigits=4))
             res = [i for i in lst]
             if i % 5 == 0:
-                print(i, i // 5)
                 if i // 5 == 1:
                     lbs[0].config(text='n= ' + str(lst).replace("[", "").replace("]", ","))
                     lst.clear()
                 else:
-                    print(lst)
                     lbs[i // 5 - 1].config(text="    " + str(lst).replace("[", "").replace("]", ","))
-                    lbs[i // 5 - 1].grid()
                     lst.clear()
-        self.root.geometry('700x500+600+400')
+        self.root.geometry('700x500+400+200')
         return res
 
     def result():
         nonlocal res
         fn_res = reduce(lambda x, y: x * y, res) / sum(res)
-        self.lllbb2.config(text='res= ' + str(fn_res))
+        self.lllbb2.config(text='f= ' + str(fn_res))
 
     lb1 = Label(self.gggfr1, text="n= ", font="Times 14")
     lb2 = Label(self.gggfr1, font='Times 14')
@@ -121,20 +118,12 @@ def generated(self):
     lb1.grid(column=0, row=0)
     lb2.grid(column=0, row=1)
     lb3.grid(column=0, row=2)
-    lb4.grid(column=0, row=2)
-    lb5.grid(column=0, row=2)
-    lb6.grid(column=0, row=2)
-    lb7.grid(column=0, row=2)
-    lb8.grid(column=0, row=2)
-    lb9.grid(column=0, row=2)
-
-    lb3.grid_forget()
-    lb4.grid_forget()
-    lb5.grid_forget()
-    lb6.grid_forget()
-    lb7.grid_forget()
-    lb8.grid_forget()
-    lb9.grid_forget()
+    lb4.grid(column=0, row=3)
+    lb5.grid(column=0, row=4)
+    lb6.grid(column=0, row=5)
+    lb7.grid(column=0, row=6)
+    lb8.grid(column=0, row=7)
+    lb9.grid(column=0, row=8)
 
     self.gggfr1.grid(row=0, column=0, padx=10, pady=10, sticky=(W, N))
 
@@ -179,7 +168,7 @@ def from_file(self):
                         fl.close()
                 if len(content) < m:
                     ask = mb.askquestion(title="warning",
-                                         message="number ov values less then m = 35 generate others?")
+                                         message="number ov values less then m = 45 generate others?")
                     if ask == 'yes':
                         for i in range(m - lk):
                             content.append(random.random())
@@ -198,7 +187,7 @@ def from_file(self):
                         fl.write(str(content[i]) + ',')
                     fl.close()
             content = [float(i) for i in content]
-            self.lllbb3.config(text='y1= ' + str(reduce(lambda x, y: x * y, content) / sum(content)))
+            self.lllbb3.config(text='f= ' + str(reduce(lambda x, y: x * y, content) / sum(content)))
             return None
 
     lb1 = Label(self.fffrom_fl, text="Please create *.txt file with content like 1, 20.255, ...", font="Times 14")

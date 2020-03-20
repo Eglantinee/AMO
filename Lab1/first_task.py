@@ -1,3 +1,4 @@
+import math
 from tkinter import *
 from tkinter import messagebox as mb
 from tkinter import filedialog as fd
@@ -34,7 +35,7 @@ def run(lst, self):
             s = float(ret(lst[4]))
             res = 0
             try:
-                res = s ** (a / b + c) + d ** (c / b + a)
+                res = math.pow(s, (a / b + c)) + math.pow(d, (c / b + a))
             except OverflowError:
                 mb.showerror(title="OverflowError", message="Result is out of integer range")
             self.config(text='y1= ' + str(res))
