@@ -249,7 +249,7 @@ class Lab1:
                     self.lllbb2.configure(text="f= ")
                     self.lllbb3.configure(text='f= ')
 
-        r1 = Radiobutton(text="File", variable=var, value=0, command=rad, font="Times 14")
+        r1 = Radiobutton(text="By hands", variable=var, value=0, command=rad, font="Times 14")
         r2 = Radiobutton(text="Generated", variable=var, value=1, font="Times 14", command=rad)
         r3 = Radiobutton(text="From File", variable=var, value=2, font="Times 14", command=rad)
 
