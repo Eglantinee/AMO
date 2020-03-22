@@ -10,12 +10,12 @@ start_time = 0
 
 
 def quick_sort(x):
-    global start_time
-    start_time = time.time()
+    # global start_time
+    # start_time = time.time()
     if len(x) < 2:
         return x
     else:
-        pivot = x[0]
+        pivot = x[len(x) // 2]
         less = [i for i in x[1:] if i <= pivot]
         greater = [i for i in x[1:] if i > pivot]
         return quick_sort(less) + [pivot] + quick_sort(greater)
@@ -145,16 +145,16 @@ def generated(self):
                 j = k
                 while j <= len(em):
                     if em[j] > 10000:
-                        a = [random.randrange(-100, 100) for i in range(em[j])]
+                        a = [random.randrange(-em[j], em[j]) for i in range(em[j])]
                         res.append(a)
                         mb.showwarning(title="Too big value",
                                        message="n > 10000 so in entry will be shown only 10000 values \n"
                                                "Because app will be slow down")
-                        i.insert(0, str(list(a[i] for i in range(1000))))
+                        i.insert(0, str(list(a[i] for i in range(10000))))
                         k += 1
                         break
                     else:
-                        a = [random.randrange(-100, 100) for i in range(em[j])]
+                        a = [random.randrange(-em[j], em[j]) for i in range(em[j])]
                         res.append(a)
                         i.insert(0, str(a))
                         k += 1
@@ -162,14 +162,19 @@ def generated(self):
         return
 
     def g_run():
+        nonlocal res
         t = []
         final = []
         if res:
             for i in res:
+                start_time = time.time()
                 final.append(quick_sort(i))
-                print(time.time(), start_time)
-                print(time.time() - start_time)
-        print(t, final)
+                t.append(time.time() - start_time)
+        # print(final)
+        print("exit norm")
+        print(t)
+        print(len(final[9]))
+        res.clear()
 
 
     lb1 = Label(self.gfr1, text="1 = ", font="Times 14")
