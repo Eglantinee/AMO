@@ -9,32 +9,39 @@ import random
 start_time = 0
 
 
-def quick_sort(x):
-    # global start_time
-    # start_time = time.time()
-    if len(x) < 2:
-        return x
-    else:
-        pivot = x[len(x) // 2]
-        less = [i for i in x[1:] if i <= pivot]
-        greater = [i for i in x[1:] if i > pivot]
-        return quick_sort(less) + [pivot] + quick_sort(greater)
+def quick_sort(x, l, r):
+    pivot = x[(l + r) // 2]
+    i = l
+    j = r
+    while i < j:
+        while x[i] < pivot:
+            i += 1
+        while x[j] > pivot:
+            j -= 1
+        if i <= j:
+            x[i], x[j] = x[j], x[i]
+            i += 1
+            j -= 1
+    if l < j:
+        quick_sort(x, l, j)
+    if i < r:
+        quick_sort(x, i, r)
 
 
 def ret(val):
     res = re.findall(r"-?\d*\.\d+|-?\d+", val.get())
-    return res[0]
+    return res
 
 
 def check_d(elem):
-    if not str(elem).replace(".", "").replace(',', '').lstrip("+-").strip().isdigit():
+    if not str(elem).replace(".", "").replace(',', '').replace("-", "").replace("+", "").replace(" ", "").isdigit():
         return False
     return True
 
 
 def check(lst):
     for i in lst:
-        if not i.get().replace(".", "").replace(',', '').lstrip("+-").replace(" ", '').isdigit():
+        if not str(i.get()).replace(".", "").replace(',', '').replace("-", "").replace("+", "").replace(" ", "").isdigit():
             mb.showerror(title="Digit Error", message="Values should be digits in integer or float form")
             return False
     return True
@@ -42,21 +49,29 @@ def check(lst):
 
 def run(lst, self):
     if check(lst):
-        if float(ret(lst[1])) != 0:
-            a = float(ret(lst[0]))
-            b = float(ret(lst[1]))
-            c = float(ret(lst[2]))
-            d = float(ret(lst[3]))
-            s = float(ret(lst[4]))
-            res = 0
-            try:
-                res = math.pow(s, (a / b + c)) + math.pow(d, (c / b + a))
-            except OverflowError:
-                mb.showerror(title="OverflowError", message="Result is out of integer range")
-            self.config(text='y1= ' + str(res))
-        else:
-            mb.showerror(title="Digit Error", message="b should not be equal 0")
-    return None
+        fl = []
+        f = open("Result1.txt", "w")
+        for i in range(len(lst)):
+            a = ret(lst[i])
+            a = [int(i) for i in a]
+            quick_sort(a, 0, len(a) - 1)
+            f.writelines("{}: ".format(i + 1) + str(a) + '\n\n\n')
+
+    #     if float(ret(lst[1])) != 0:
+    #         a = float(ret(lst[0]))
+    #         b = float(ret(lst[1]))
+    #         c = float(ret(lst[2]))
+    #         d = float(ret(lst[3]))
+    #         s = float(ret(lst[4]))
+    #         res = 0
+    #         try:
+    #             res = math.pow(s, (a / b + c)) + math.pow(d, (c / b + a))
+    #         except OverflowError:
+    #             mb.showerror(title="OverflowError", message="Result is out of integer range")
+    #         self.config(text='y1= ' + str(res))
+    #     else:
+    #         mb.showerror(title="Digit Error", message="b should not be equal 0")
+    # return None
 
 
 def size_and_title(self):
@@ -121,7 +136,6 @@ def file(self):
 
 
 def generated(self):
-
     res = []
 
     def generation():
@@ -154,7 +168,7 @@ def generated(self):
                         k += 1
                         break
                     else:
-                        a = [random.randrange(-em[j], em[j]) for i in range(em[j])]
+                        a = [random.randrange(-em[j] * 2, em[j] * 2) for i in range(em[j])]
                         res.append(a)
                         i.insert(0, str(a))
                         k += 1
@@ -167,15 +181,16 @@ def generated(self):
         final = []
         if res:
             for i in res:
-                start_time = time.time()
-                final.append(quick_sort(i))
-                t.append(time.time() - start_time)
-        # print(final)
+                st_time = time.time()
+                quick_sort(i, 0, len(i) - 1)
+                final.append(i)
+                t.append(time.time() - st_time)
+        f = open("Results.txt", "w")
+        for i in range(len(final)):
+            f.writelines("{}: ".format(i + 1) + str(final[i]) + "\n\n\n")
         print("exit norm")
         print(t)
-        print(len(final[9]))
         res.clear()
-
 
     lb1 = Label(self.gfr1, text="1 = ", font="Times 14")
     lb2 = Label(self.gfr1, text="2 = ", font="Times 14")

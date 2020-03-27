@@ -1,4 +1,6 @@
+import os
 from tkinter import *
+from tkinter import messagebox as mb
 import first_task
 
 
@@ -86,6 +88,14 @@ class Lab1:
         r3.pack(anchor=W)
 
         win.file(self)
+
+        def on_closing():
+            if os.path.isfile('Results.txt'):
+                y = mb.askquestion(title="Results", message="Remove file Results.txt?")
+                if y == 'yes':
+                    os.remove("Results.txt")
+            sys.exit()
+        self.root.protocol("WM_DELETE_WINDOW", on_closing)
         self.root.mainloop()
 
 
