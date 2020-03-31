@@ -5,8 +5,7 @@ from tkinter import messagebox as mb
 from tkinter import filedialog as fd
 import re
 import random
-
-start_time = 0
+import matplotlib.pyplot as plt
 
 
 def quick_sort(x, l, r):
@@ -33,45 +32,44 @@ def ret(val):
     return res
 
 
-def check_d(elem):
-    if not str(elem).replace(".", "").replace(',', '').replace("-", "").replace("+", "").replace(" ", "").isdigit():
-        return False
-    return True
-
-
 def check(lst):
     for i in lst:
-        if not str(i.get()).replace(".", "").replace(',', '').replace("-", "").replace("+", "").replace(" ", "").isdigit():
+        if not str(i.get()).replace(".", "").replace(',', '').replace("-", "").replace("+", "").replace(" ",
+                                                                                                        "").isdigit():
             mb.showerror(title="Digit Error", message="Values should be digits in integer or float form")
             return False
     return True
 
 
-def run(lst, self):
+def run(lst):
     if check(lst):
-        fl = []
+        t = []
         f = open("Result1.txt", "w")
+        res = []
         for i in range(len(lst)):
             a = ret(lst[i])
-            a = [int(i) for i in a]
+            a = [float(i) for i in a]
+            res.append(a)
+            st = time.time()
             quick_sort(a, 0, len(a) - 1)
+            t.append(time.time() - st)
             f.writelines("{}: ".format(i + 1) + str(a) + '\n\n\n')
+        f.close()
 
-    #     if float(ret(lst[1])) != 0:
-    #         a = float(ret(lst[0]))
-    #         b = float(ret(lst[1]))
-    #         c = float(ret(lst[2]))
-    #         d = float(ret(lst[3]))
-    #         s = float(ret(lst[4]))
-    #         res = 0
-    #         try:
-    #             res = math.pow(s, (a / b + c)) + math.pow(d, (c / b + a))
-    #         except OverflowError:
-    #             mb.showerror(title="OverflowError", message="Result is out of integer range")
-    #         self.config(text='y1= ' + str(res))
-    #     else:
-    #         mb.showerror(title="Digit Error", message="b should not be equal 0")
-    # return None
+        x = [len(i) for i in sorted(res)]
+        t = sorted(t)
+        x2 = [i for i in range(1, max(x))]
+        y2 = [i * math.log2(i) for i in range(1, max(x))]
+
+        plt.figure()
+
+        plt.subplot(221)
+        plt.plot(x, t, label="first")
+
+        plt.subplot(222)
+        plt.plot(x2, y2, label="second")
+
+        plt.show()
 
 
 def size_and_title(self):
@@ -128,7 +126,7 @@ def file(self):
     self.lbb1.grid(column=0, row=1, sticky=W)
 
     but1 = Button(self.file_frame, text="Run", font="Times 14",
-                  command=lambda lst=(e1, e2, e3, e4, e5), sl=self.lbb1: run(lst, sl))
+                  command=lambda lst=(e1, e2, e3, e4, e5, e6, e7, e8, e9, e10): run(lst))
 
     but1.grid(row=1, column=0, sticky=N)
 
@@ -154,6 +152,13 @@ def generated(self):
                 else:
                     continue
             k = 0
+            for i in em:
+                if i >= 10000:
+                    mb.showwarning(title="Too big value",
+                                   message="n > 10000 so in entry will be shown only 10000 values \n"
+                                           "Because app will be slow down")
+                    break
+
             for i in lst2:
                 i.delete(0, END)
                 j = k
@@ -161,14 +166,11 @@ def generated(self):
                     if em[j] > 10000:
                         a = [random.randrange(-em[j], em[j]) for i in range(em[j])]
                         res.append(a)
-                        mb.showwarning(title="Too big value",
-                                       message="n > 10000 so in entry will be shown only 10000 values \n"
-                                               "Because app will be slow down")
                         i.insert(0, str(list(a[i] for i in range(10000))))
                         k += 1
                         break
                     else:
-                        a = [random.randrange(-em[j] * 2, em[j] * 2) for i in range(em[j])]
+                        a = [random.randrange(-10000, 10000) for i in range(em[j])]
                         res.append(a)
                         i.insert(0, str(a))
                         k += 1
@@ -179,17 +181,34 @@ def generated(self):
         nonlocal res
         t = []
         final = []
+
         if res:
             for i in res:
                 st_time = time.time()
                 quick_sort(i, 0, len(i) - 1)
-                final.append(i)
                 t.append(time.time() - st_time)
-        f = open("Results.txt", "w")
+                final.append(i)
+
+        f = open("Result2.txt", "w")
         for i in range(len(final)):
             f.writelines("{}: ".format(i + 1) + str(final[i]) + "\n\n\n")
-        print("exit norm")
-        print(t)
+        f.close()
+
+        x = [len(i) for i in res]
+        quick_sort(x, 0, len(x) - 1)
+        quick_sort(t, 0, len(t) - 1)
+        x2 = [i for i in range(1, max(x))]
+        y2 = [i * math.log2(i) for i in range(1, max(x))]
+
+        plt.figure()
+
+        plt.subplot(221)
+        plt.plot(x, t, label="first")
+
+        plt.subplot(222)
+        plt.plot(x2, y2, label="second")
+
+        plt.show()
         res.clear()
 
     lb1 = Label(self.gfr1, text="1 = ", font="Times 14")
@@ -295,36 +314,60 @@ def generated(self):
 
 
 def from_file(self):
+    def local_check(text):
+        text = str(text).replace(".", "").replace(',', '').replace("-", "").replace("+", "")
+        text = text.replace(" ","").replace("[", "").replace("]", "").isdigit()
+        if not text:
+            mb.showerror(title="Digit Error", message="Values should be digits in integer or float form")
+            return False
+        return True
+
     def open_file():
         fl = fd.askopenfile(mode='r', filetypes=[('Text Files', '*.txt')])
         if fl is not None:
             content = fl.read()
-            items = re.findall(r'[a-zA-Z]', content)
-            values = re.findall(r"-?\d*\.\d+|-?\d+", content)
-            a, b, c, d, s = 0, 1, 0, 0, 0
-            for i in range(len(items)):
-                if items[i].lower() == 'a':
-                    a = float(values[i])
-                elif items[i].lower() == 'b':
-                    if float(values[i]) == 0:
-                        mb.showerror(title="Error", message="b should not be equal 0")
-                    else:
-                        b = float(values[i])
-                elif items[i].lower() == 'c':
-                    c = float(values[i])
-                elif items[i].lower() == 'd':
-                    d = float(values[i])
-                elif items[i].lower() == 's':
-                    s = float(values[i])
+            res = []
+            start = 0
+            print("parse file...")
+            k = 10
+            x = []
+            y = []
+            for i in range(len(content)):
+                if content[i] == '[':
+                    start = i
+                    continue
+                if content[i] == "]":
+                    if local_check(content[start:i]):
+                        res.append([float(i) for i in re.findall(r"-?\d*\.\d+|-?\d+", content[start:i])])
+                        print("Completed {}%".format(k))
+                        k += 10
 
-            res = 0
-
-            try:
-                res = s ** (a / b + c) + d ** (c / b + a)
-            except OverflowError:
-                mb.showerror(title="OverflowError", message="Result is out of integer range")
-
-            self.lbb3.config(text='y1= ' + str(round(res, ndigits=4)))
+            if len(res) < 10:
+                a = mb.askquestion(title="Error", message="Number of arrays is less then 10, generate others?")
+                if a == "yes":
+                    for i in range(10 - len(res)):
+                        f = open(fl.name, "a")
+                        tmp = [random.randint(-1000000, 1000000) for i in range(random.randint(0, 1000000))]
+                        res.append(tmp)
+                        f.write('\n' + str(tmp) + "\n\n")
+            print("Processing....")
+            print("Create Result3.txt")
+            f = open("Result3.txt", "w")
+            k = 0
+            for i in range(len(res)):
+                st = time.time()
+                quick_sort(res[i], 0, len(res[i]) - 1)
+                y.append(time.time() - st)
+                f.writelines("{}: ".format(i) + str(res[i]) + "\n\n\n")
+                print("Writing in file {}%".format(k))
+                k += 10
+            f.close()
+            x = [len(res[i]) for i in range(len(res))]
+            n = max(x)
+            plt.plot(x, y, label="text")
+            plt.plot([i for i in range(n)], [i * math.log1p(i) for i in range(n)])
+            plt.show()
+            print("All is ready")
 
     lb1 = Label(self.from_fl, text="Create *.txt file like a=1, b=2 ... Else a,s,c,d=0, b=1", font="Times 14")
     lb2 = Label(self.flfr1, text="y1 = s^(a/b + c) + d^(c/b + a)", font="Times 14")
@@ -346,3 +389,7 @@ def from_file(self):
     but1.grid(row=2, column=1)
 
     self.from_fl.pack(anchor=W)
+
+
+
+    

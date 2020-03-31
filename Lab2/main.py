@@ -36,7 +36,7 @@ class Lab1:
         self.root.config(menu=mainmenu)
 
         filemenu = Menu(mainmenu, tearoff=0)
-        filemenu.add_command(label="First Task", font="Times 14",)
+        filemenu.add_command(label="First Task", font="Times 14", )
         mainmenu.add_cascade(label="Tasks", font="Times 14", menu=filemenu)
 
         def rad():
@@ -78,7 +78,6 @@ class Lab1:
                 self.lbb2.configure(text="y1= ")
                 self.lbb3.configure(text='y1= ')
 
-
         r1 = Radiobutton(text="By hands", variable=var, value=0, command=rad, font="Times 14")
         r2 = Radiobutton(text="Generated", variable=var, value=1, font="Times 14", command=rad)
         r3 = Radiobutton(text="From File", variable=var, value=2, font="Times 14", command=rad)
@@ -90,11 +89,22 @@ class Lab1:
         win.file(self)
 
         def on_closing():
-            if os.path.isfile('Results.txt'):
-                y = mb.askquestion(title="Results", message="Remove file Results.txt?")
+            if os.path.isfile('Result1.txt'):
+                if os.path.isfile('Result2.txt'):
+                    y = mb.askquestion(title="Results", message="Remove file Result1.txt and Result2.txt?")
+                    if y == 'yes':
+                        os.remove("Result2.txt")
+                        os.remove("Result1.txt")
+                else:
+                    y = mb.askquestion(title="Results", message="Remove file Result1.txt?")
+                    if y == 'yes':
+                        os.remove("Result1.txt")
+            elif os.path.isfile('Result2.txt'):
+                y = mb.askquestion(title="Results", message="Remove file Result2.txt?")
                 if y == 'yes':
-                    os.remove("Results.txt")
+                    os.remove("Result2.txt")
             sys.exit()
+
         self.root.protocol("WM_DELETE_WINDOW", on_closing)
         self.root.mainloop()
 
