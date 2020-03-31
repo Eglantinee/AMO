@@ -4,6 +4,12 @@ import matplotlib
 import matplotlib.pyplot as plt
 import random
 
+
+
+
+
+
+
 # Data for plotting
 
 # t = (0.0, 2.0, 0.01)
