@@ -60,7 +60,7 @@ def quick_sort(x):
         pivot = x[len(x) // 2]
         less = [i for i in x[1:] if i <= pivot]
         greater = [i for i in x[1:] if i > pivot]
-        return quick_sort(less) + [pivot] + quick_sort(greater)
+        return quick_sort((less) + [pivot] + quick_sort(greater)
 
 
 def quick_sort2(x, l, r):

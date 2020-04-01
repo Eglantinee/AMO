@@ -40,7 +40,6 @@ def check(lst):
             return False
     return True
 
-
 def run(lst):
     if check(lst):
         t = []
@@ -57,17 +56,19 @@ def run(lst):
         f.close()
 
         x = [len(i) for i in sorted(res)]
+        x = sorted(x)
         t = sorted(t)
-        x2 = [i for i in range(1, max(x))]
-        y2 = [i * math.log2(i) for i in range(1, max(x))]
-
+        x2 = [i for i in range(1, max(x)+1)]
+        y2 = [i * math.log2(i) for i in x2]
         plt.figure()
-
+        
         plt.subplot(221)
-        plt.plot(x, t, label="first")
-
+        plt.plot(x, t)
+        plt.title('Real')
+        
         plt.subplot(222)
-        plt.plot(x2, y2, label="second")
+        plt.plot(x2, y2)
+        plt.title('Expected')
 
         plt.show()
 
@@ -123,7 +124,6 @@ def file(self):
     e10.grid(row=9, column=1, columnspan=2)
 
     self.fr1.grid(row=0, column=0, padx=10, pady=10)
-    self.lbb1.grid(column=0, row=1, sticky=W)
 
     but1 = Button(self.file_frame, text="Run", font="Times 14",
                   command=lambda lst=(e1, e2, e3, e4, e5, e6, e7, e8, e9, e10): run(lst))
@@ -149,11 +149,10 @@ def generated(self):
                 if i <= 0:
                     mb.showerror(title="Incorrect amount", message="n should be > 0")
                     return
-                else:
-                    continue
+
             k = 0
             for i in em:
-                if i >= 10000:
+                if i > 10000:
                     mb.showwarning(title="Too big value",
                                    message="n > 10000 so in entry will be shown only 10000 values \n"
                                            "Because app will be slow down")
@@ -181,7 +180,6 @@ def generated(self):
         nonlocal res
         t = []
         final = []
-
         if res:
             for i in res:
                 st_time = time.time()
@@ -203,11 +201,13 @@ def generated(self):
         plt.figure()
 
         plt.subplot(221)
-        plt.plot(x, t, label="first")
+        plt.plot(x, t)
+        plt.title('Real')
 
         plt.subplot(222)
-        plt.plot(x2, y2, label="second")
-
+        plt.plot(x2, y2)
+        plt.title('Expected')
+        
         plt.show()
         res.clear()
 
@@ -328,10 +328,12 @@ def from_file(self):
             content = fl.read()
             res = []
             start = 0
-            print("parse file...")
+            print("Parse file...")
             k = 10
             x = []
             y = []
+            flag = False
+
             for i in range(len(content)):
                 if content[i] == '[':
                     start = i
@@ -339,21 +341,28 @@ def from_file(self):
                 if content[i] == "]":
                     if local_check(content[start:i]):
                         res.append([float(i) for i in re.findall(r"-?\d*\.\d+|-?\d+", content[start:i])])
-                        print("Completed {}%".format(k))
+                        print("Reading completed {}%".format(k))
                         k += 10
-
+                
             if len(res) < 10:
                 a = mb.askquestion(title="Error", message="Number of arrays is less then 10, generate others?")
                 if a == "yes":
-                    for i in range(10 - len(res)):
-                        f = open(fl.name, "a")
-                        tmp = [random.randint(-1000000, 1000000) for i in range(random.randint(0, 1000000))]
-                        res.append(tmp)
-                        f.write('\n' + str(tmp) + "\n\n")
+                    flag = True
+            
+            
+            if flag:
+                for i in range(10 - len(res)):
+                    f = open(fl.name, "a")
+                    tmp = [random.randint(-1000000, 1000000) for i in range(random.randint(0, 1000000))]
+                    res.append(tmp)
+                    f.write('\n' + str(tmp) + "\n\n")
+                    print("Reading complited {}%".format(k))
+                    k += 10
+                                            
             print("Processing....")
             print("Create Result3.txt")
             f = open("Result3.txt", "w")
-            k = 0
+            k = 10
             for i in range(len(res)):
                 st = time.time()
                 quick_sort(res[i], 0, len(res[i]) - 1)
@@ -362,34 +371,43 @@ def from_file(self):
                 print("Writing in file {}%".format(k))
                 k += 10
             f.close()
+            
             x = [len(res[i]) for i in range(len(res))]
+            x = sorted(x)
+            y = sorted(y)
+            
             n = max(x)
-            plt.plot(x, y, label="text")
-            plt.plot([i for i in range(n)], [i * math.log1p(i) for i in range(n)])
-            plt.show()
+            
+            x2 = [i for i in range(1, n + 1)]
+            y2 = [i * math.log2(i) for i in x2]
+            
             print("All is ready")
+            print(x)
+            
+            plt.figure()
 
-    lb1 = Label(self.from_fl, text="Create *.txt file like a=1, b=2 ... Else a,s,c,d=0, b=1", font="Times 14")
-    lb2 = Label(self.flfr1, text="y1 = s^(a/b + c) + d^(c/b + a)", font="Times 14")
-    lb3 = Label(self.flfr1, text=" ", font="Times 14")
-    lb4 = Label(self.flfr1, text=" ", font="Times 14")
-    lb5 = Label(self.flfr1, text=" ", font="Times 14")
+            plt.subplot(221)
+            plt.plot(x, y)
+            plt.title('Real')
 
-    lb1.grid(row=0, column=0, columnspan=20, padx=10, pady=10)
-    self.lbb3.grid(column=0, row=1, sticky=W)
-    lb2.grid(column=0, row=0, sticky=W)
-    lb3.grid(column=0, row=2)
-    lb4.grid(column=0, row=3)
-    lb5.grid(column=0, row=4)
+            plt.subplot(222)
+            plt.plot(x2, y2)
+            plt.title('Expected')
+        
+            plt.show()
 
-    self.flfr1.grid(row=1, column=0, padx=10, pady=10, sticky=W)
+    lb1 = Label(self.from_fl,
+                text="Create *.txt file with content like [1, 2, 3...]",
+                font="Times 14")
+    lb2 = Label(self.from_fl, text="Each array should be in barckets[]", font="Times 14")
+
+    lb1.grid(row=0, column=0, columnspan=20, padx=10, pady=10, sticky=W)
+    lb2.grid(column=0, row=1, sticky=W, padx=10)
 
     but1 = Button(self.from_fl, text="Search", font="Times 14", command=open_file)
 
-    but1.grid(row=2, column=1)
+    but1.grid(row=2, column=1, pady=10)
 
     self.from_fl.pack(anchor=W)
-
-
-
     
+    # TODO task3: menu
