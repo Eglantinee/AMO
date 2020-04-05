@@ -5,7 +5,11 @@ from tkinter import messagebox as mb
 from tkinter import filedialog as fd
 import re
 import random
-import matplotlib.pyplot as plt
+import warnings
+
+warnings.filterwarnings("ignore", "(?s).*MATPLOTLIBDATA.*", category=UserWarning)  # just to make exe file
+import matplotlib                                                                  # i use this 3 lines
+from matplotlib import pyplot as plt                                               # this is 3 line
 
 
 def quick_sort(x, l, r):
@@ -40,6 +44,7 @@ def check(lst):
             return False
     return True
 
+
 def run(lst):
     if check(lst):
         t = []
@@ -55,17 +60,18 @@ def run(lst):
             f.writelines("{}: ".format(i + 1) + str(a) + '\n\n\n')
         f.close()
 
+        mb.showinfo(title="Result", message="Sorted arrays you can see in file Result1.txt in current directory")
         x = [len(i) for i in sorted(res)]
         x = sorted(x)
         t = sorted(t)
-        x2 = [i for i in range(1, max(x)+1)]
+        x2 = [i for i in range(1, max(x) + 1)]
         y2 = [i * math.log2(i) for i in x2]
         plt.figure()
-        
+
         plt.subplot(221)
         plt.plot(x, t)
         plt.title('Real')
-        
+
         plt.subplot(222)
         plt.plot(x2, y2)
         plt.title('Expected')
@@ -191,6 +197,7 @@ def generated(self):
         for i in range(len(final)):
             f.writelines("{}: ".format(i + 1) + str(final[i]) + "\n\n\n")
         f.close()
+        mb.showinfo(title="Result", message="Sorted arrays you can see in file Result2.txt in current directory")
 
         x = [len(i) for i in res]
         quick_sort(x, 0, len(x) - 1)
@@ -207,7 +214,7 @@ def generated(self):
         plt.subplot(222)
         plt.plot(x2, y2)
         plt.title('Expected')
-        
+
         plt.show()
         res.clear()
 
@@ -316,7 +323,7 @@ def generated(self):
 def from_file(self):
     def local_check(text):
         text = str(text).replace(".", "").replace(',', '').replace("-", "").replace("+", "")
-        text = text.replace(" ","").replace("[", "").replace("]", "").isdigit()
+        text = text.replace(" ", "").replace("[", "").replace("]", "").isdigit()
         if not text:
             mb.showerror(title="Digit Error", message="Values should be digits in integer or float form")
             return False
@@ -343,22 +350,21 @@ def from_file(self):
                         res.append([float(i) for i in re.findall(r"-?\d*\.\d+|-?\d+", content[start:i])])
                         print("Reading completed {}%".format(k))
                         k += 10
-                
+
             if len(res) < 10:
                 a = mb.askquestion(title="Error", message="Number of arrays is less then 10, generate others?")
                 if a == "yes":
                     flag = True
-            
-            
+
             if flag:
                 for i in range(10 - len(res)):
                     f = open(fl.name, "a")
                     tmp = [random.randint(-1000000, 1000000) for i in range(random.randint(0, 1000000))]
                     res.append(tmp)
                     f.write('\n' + str(tmp) + "\n\n")
-                    print("Reading complited {}%".format(k))
+                    print("Reading completed {}%".format(k))
                     k += 10
-                                            
+
             print("Processing....")
             print("Create Result3.txt")
             f = open("Result3.txt", "w")
@@ -371,19 +377,20 @@ def from_file(self):
                 print("Writing in file {}%".format(k))
                 k += 10
             f.close()
-            
+            fl.close()
+            mb.showinfo(title="Result", message="Sorted arrays you can see in file Result3.txt in current directory")
+
             x = [len(res[i]) for i in range(len(res))]
             x = sorted(x)
             y = sorted(y)
-            
+
             n = max(x)
-            
+
             x2 = [i for i in range(1, n + 1)]
             y2 = [i * math.log2(i) for i in x2]
-            
+
             print("All is ready")
-            print(x)
-            
+
             plt.figure()
 
             plt.subplot(221)
@@ -393,13 +400,13 @@ def from_file(self):
             plt.subplot(222)
             plt.plot(x2, y2)
             plt.title('Expected')
-        
+
             plt.show()
 
     lb1 = Label(self.from_fl,
                 text="Create *.txt file with content like [1, 2, 3...]",
                 font="Times 14")
-    lb2 = Label(self.from_fl, text="Each array should be in barckets[]", font="Times 14")
+    lb2 = Label(self.from_fl, text="Each array should be in brackets[]", font="Times 14")
 
     lb1.grid(row=0, column=0, columnspan=20, padx=10, pady=10, sticky=W)
     lb2.grid(column=0, row=1, sticky=W, padx=10)
@@ -409,5 +416,3 @@ def from_file(self):
     but1.grid(row=2, column=1, pady=10)
 
     self.from_fl.pack(anchor=W)
-    
-    # TODO task3: menu
